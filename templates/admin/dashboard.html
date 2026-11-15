@@ -17,32 +17,47 @@
   <div class="row g-3 mb-4">
     <div class="col-6 col-lg">
       <div class="summary-card">
-        <div class="summary-value">{{ total_donors }}</div>
-        <div class="summary-label">Registered Donors</div>
+        <div class="summary-icon summary-icon-green"><i class="bi bi-people-fill"></i></div>
+        <div>
+          <div class="summary-value">{{ total_donors }}</div>
+          <div class="summary-label">Registered Donors</div>
+        </div>
       </div>
     </div>
     <div class="col-6 col-lg">
       <div class="summary-card">
-        <div class="summary-value">{{ total_ngos }}</div>
-        <div class="summary-label">Registered NGOs</div>
+        <div class="summary-icon summary-icon-green"><i class="bi bi-heart-fill"></i></div>
+        <div>
+          <div class="summary-value">{{ total_ngos }}</div>
+          <div class="summary-label">Registered NGOs</div>
+        </div>
       </div>
     </div>
     <div class="col-6 col-lg">
       <div class="summary-card">
-        <div class="summary-value">{{ total_donations }}</div>
-        <div class="summary-label">Total Donations</div>
+        <div class="summary-icon summary-icon-green"><i class="bi bi-basket2-fill"></i></div>
+        <div>
+          <div class="summary-value">{{ total_donations }}</div>
+          <div class="summary-label">Total Donations</div>
+        </div>
       </div>
     </div>
     <div class="col-6 col-lg">
       <div class="summary-card">
-        <div class="summary-value">{{ pending_requests }}</div>
-        <div class="summary-label">Pending Requests</div>
+        <div class="summary-icon summary-icon-orange"><i class="bi bi-clock-history"></i></div>
+        <div>
+          <div class="summary-value">{{ pending_requests }}</div>
+          <div class="summary-label">Pending Requests</div>
+        </div>
       </div>
     </div>
     <div class="col-6 col-lg">
       <div class="summary-card">
-        <div class="summary-value">{{ completed_donations }}</div>
-        <div class="summary-label">Completed Donations</div>
+        <div class="summary-icon summary-icon-green"><i class="bi bi-check-circle-fill"></i></div>
+        <div>
+          <div class="summary-value">{{ completed_donations }}</div>
+          <div class="summary-label">Completed Donations</div>
+        </div>
       </div>
     </div>
   </div>

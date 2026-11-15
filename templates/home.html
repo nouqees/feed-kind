@@ -1,33 +1,54 @@
 {% extends "base.html" %}
-{% block title %}Home - Food Waste &amp; Donation Platform{% endblock %}
+{% block title %}Feed Kind - Share Food. Spread Kindness.{% endblock %}
 {% block content %}
 <div class="container">
-  <div class="p-5 mb-4 rounded-3" style="background-color: var(--color-light-green);">
-    <h1 class="mb-3" style="color: var(--color-primary);">Reduce Food Waste. Feed More People.</h1>
-    <p class="lead">
-      A simple platform connecting food donors with NGOs so that excess food
-      can be collected and put to good use instead of being wasted.
-    </p>
+  <div class="p-5 mb-5 rounded-3" style="background: linear-gradient(135deg, var(--color-cream), var(--color-light-green)); border-radius: 24px !important;">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <h1 class="mb-2" style="color: var(--color-primary); font-size: 3rem;">Feed Kind</h1>
+        <p class="fs-4 mb-3" style="color: var(--color-warning); font-family: var(--font-display); font-weight: 600;">Share Food. Spread Kindness.</p>
+        <p class="lead">
+          Reduce food waste by donating surplus food and help those in need. A simple
+          platform connecting food donors with NGOs so that excess food can be collected
+          and put to good use instead of being wasted.
+        </p>
+        <div class="d-flex gap-3 mt-4">
+          {% if session.get('user_id') %}
+            <a href="{{ url_for('donor.add_donation') if session.get('user_role') == 'DONOR' else url_for('ngo.available_donations') }}" class="btn btn-primary">Donate Food</a>
+            <a href="{{ url_for('ngo.available_donations') if session.get('user_role') == 'NGO' else url_for('donor.dashboard') }}" class="btn btn-outline-primary">Request Food</a>
+          {% else %}
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Donate Food</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary">Request Food</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-5 text-center">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Feed Kind" class="img-fluid" style="max-width: 280px;">
+      </div>
+    </div>
   </div>
 
-  <div class="row g-4 mb-4">
+  <div class="row g-4 mb-4 text-center">
     <div class="col-md-4">
-      <div class="card h-100 p-3">
-        <h5>1. Donors post food</h5>
-        <p class="text-secondary mb-0">Restaurants, hotels, halls and individuals list excess food that's ready for pickup.</p>
+      <div class="summary-icon summary-icon-green mx-auto mb-2" style="width: 56px; height: 56px; font-size: 1.5rem;">
+        <i class="bi bi-recycle"></i>
       </div>
+      <h5>Reduce Food Waste</h5>
+      <p class="text-secondary mb-0">Restaurants, hotels, halls and individuals list excess food that's ready for pickup.</p>
     </div>
     <div class="col-md-4">
-      <div class="card h-100 p-3">
-        <h5>2. NGOs request it</h5>
-        <p class="text-secondary mb-0">Registered NGOs browse available donations and request the ones they need.</p>
+      <div class="summary-icon summary-icon-red mx-auto mb-2" style="width: 56px; height: 56px; font-size: 1.5rem;">
+        <i class="bi bi-heart-fill"></i>
       </div>
+      <h5>Help Communities</h5>
+      <p class="text-secondary mb-0">Registered NGOs browse available donations and request the ones they need.</p>
     </div>
     <div class="col-md-4">
-      <div class="card h-100 p-3">
-        <h5>3. Donor confirms handover</h5>
-        <p class="text-secondary mb-0">The donor accepts a request, the NGO collects the food, and the donor marks it complete.</p>
+      <div class="summary-icon summary-icon-orange mx-auto mb-2" style="width: 56px; height: 56px; font-size: 1.5rem;">
+        <i class="bi bi-people-fill"></i>
       </div>
+      <h5>Build a Kind Society</h5>
+      <p class="text-secondary mb-0">The donor accepts a request, the NGO collects the food, and the donor marks it complete.</p>
     </div>
   </div>
 

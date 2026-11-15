@@ -16,20 +16,29 @@
   <div class="row g-3 mb-4">
     <div class="col-sm-6 col-lg-4">
       <div class="summary-card">
-        <div class="summary-value">{{ available_count }}</div>
-        <div class="summary-label">Available Donations</div>
+        <div class="summary-icon summary-icon-green"><i class="bi bi-basket2-fill"></i></div>
+        <div>
+          <div class="summary-value">{{ available_count }}</div>
+          <div class="summary-label">Available Donations</div>
+        </div>
       </div>
     </div>
     <div class="col-sm-6 col-lg-4">
       <div class="summary-card">
-        <div class="summary-value">{{ pending_count }}</div>
-        <div class="summary-label">Pending Requests</div>
+        <div class="summary-icon summary-icon-orange"><i class="bi bi-clock-history"></i></div>
+        <div>
+          <div class="summary-value">{{ pending_count }}</div>
+          <div class="summary-label">Pending Requests</div>
+        </div>
       </div>
     </div>
     <div class="col-sm-6 col-lg-4">
       <div class="summary-card">
-        <div class="summary-value">{{ accepted_count }}</div>
-        <div class="summary-label">Accepted Requests</div>
+        <div class="summary-icon summary-icon-red"><i class="bi bi-heart-fill"></i></div>
+        <div>
+          <div class="summary-value">{{ accepted_count }}</div>
+          <div class="summary-label">Accepted Requests</div>
+        </div>
       </div>
     </div>
   </div>

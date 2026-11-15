@@ -1,5 +1,9 @@
 {% macro render(items, active) %}
 <nav class="col-md-3 col-lg-2 sidebar p-3">
+  <div class="sidebar-logo">
+    <img src="{{ url_for('static', filename='images/logo-mark.png') }}" alt="Feed Kind">
+  </div>
+  <span class="brand-name">Feed Kind</span>
   <ul class="nav flex-column">
     {% for item in items %}
       <li class="nav-item">
@@ -7,5 +11,8 @@
       </li>
     {% endfor %}
   </ul>
+  <div class="sidebar-footer">
+    <a class="logout-pill" href="{{ url_for('auth.logout') }}">Logout</a>
+  </div>
 </nav>
 {% endmacro %}
