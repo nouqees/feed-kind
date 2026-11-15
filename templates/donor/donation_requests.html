@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}Requests for {{ donation.food_name }}{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('donor.dashboard')},
+  {"key": "donations", "label": "My Donations", "url": url_for('donor.donations')},
+  {"key": "add", "label": "Add Donation", "url": url_for('donor.add_donation')},
+], "donations") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <a href="{{ url_for('donor.donations') }}" class="text-secondary">&larr; Back to My Donations</a>
+  <h2 class="mt-2" style="color: var(--color-primary);">Requests for {{ donation.food_name }}</h2>
+  <p class="text-secondary">Donation status: <span class="badge badge-{{ donation.status|lower }}">{{ donation.status }}</span></p>
+
+  {% if donation.status == 'Reserved' %}
+  <div class="card p-3 mb-4" style="max-width: 500px;">
+    <h6>Mark Handover as Completed</h6>
+    <form method="POST" action="{{ url_for('donor.complete_donation', donation_id=donation.id) }}"
+          onsubmit="return confirm('Mark this donation as completed? This cannot be undone.');">
+      <div class="mb-2">
+        <label class="form-label">Remarks (optional)</label>
+        <textarea class="form-control" name="remarks" rows="2"></textarea>
+      </div>
+      <button type="submit" class="btn btn-success btn-sm">Mark Completed</button>
+    </form>
+  </div>
+  {% endif %}
+
+  {% if requests %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr><th>NGO</th><th>Requested Qty</th><th>Message</th><th>Status</th><th>Requested At</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for r in requests %}
+        <tr>
+          <td>{{ r.ngo.name }}</td>
+          <td>{{ r.requested_quantity }}</td>
+          <td>{{ r.message or '-' }}</td>
+          <td><span class="badge badge-{{ r.status|lower }}">{{ r.status }}</span></td>
+          <td>{{ r.requested_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+          <td class="text-nowrap">
+            {% if r.status == 'Pending' %}
+            <form method="POST" action="{{ url_for('donor.accept_request', request_id=r.id) }}" class="d-inline"
+                  onsubmit="return confirm('Accept this request? Other pending requests for this donation will be rejected.');">
+              <button type="submit" class="btn btn-sm btn-success">Accept</button>
+            </form>
+            <form method="POST" action="{{ url_for('donor.reject_request', request_id=r.id) }}" class="d-inline"
+                  onsubmit="return confirm('Reject this request?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-secondary">No NGOs have requested this donation yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}NGO Dashboard{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('ngo.dashboard')},
+  {"key": "available", "label": "Available Donations", "url": url_for('ngo.available_donations')},
+  {"key": "requests", "label": "My Requests", "url": url_for('ngo.my_requests')},
+], "dashboard") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4" style="color: var(--color-primary);">NGO Dashboard</h2>
+
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-4">
+      <div class="summary-card">
+        <div class="summary-value">{{ available_count }}</div>
+        <div class="summary-label">Available Donations</div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+      <div class="summary-card">
+        <div class="summary-value">{{ pending_count }}</div>
+        <div class="summary-label">Pending Requests</div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-4">
+      <div class="summary-card">
+        <div class="summary-value">{{ accepted_count }}</div>
+        <div class="summary-label">Accepted Requests</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Recently Added Donations</h5>
+    <a href="{{ url_for('ngo.available_donations') }}" class="btn btn-primary btn-sm">Browse All</a>
+  </div>
+
+  {% if recent_available %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr><th>Food</th><th>Category</th><th>Quantity</th><th>Available Until</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for d in recent_available %}
+        <tr>
+          <td>{{ d.food_name }}</td>
+          <td>{{ d.category.category_name }}</td>
+          <td>{{ d.quantity }}</td>
+          <td>{{ d.available_until.strftime('%d %b %Y, %I:%M %p') }}</td>
+          <td><a href="{{ url_for('ngo.donation_detail', donation_id=d.id) }}" class="btn btn-sm btn-outline-primary">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-secondary">No donations are available right now. Check back soon.</p>
+  {% endif %}
+</div>
+{% endblock %}

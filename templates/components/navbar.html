@@ -1,0 +1,12 @@
+<nav class="navbar navbar-expand-lg navbar-app sticky-top px-3">
+  <a class="navbar-brand" href="{{ url_for('main.home') }}">Food Waste &amp; Donation Platform</a>
+  <div class="ms-auto">
+    {% if session.get('user_id') %}
+      <span class="me-3 text-secondary">{{ session.get('user_name') }} ({{ session.get('user_role') }})</span>
+      <a class="btn btn-sm btn-secondary" href="{{ url_for('auth.logout') }}">Logout</a>
+    {% else %}
+      <a class="btn btn-sm btn-outline-secondary me-2" href="{{ url_for('auth.login') }}">Login</a>
+      <a class="btn btn-sm btn-primary" href="{{ url_for('auth.register') }}">Register</a>
+    {% endif %}
+  </div>
+</nav>

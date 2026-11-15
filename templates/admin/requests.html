@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}Request Records{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('admin.dashboard')},
+  {"key": "users", "label": "Manage Users", "url": url_for('admin.users')},
+  {"key": "donations", "label": "Donation Records", "url": url_for('admin.donations')},
+  {"key": "requests", "label": "Request Records", "url": url_for('admin.requests_list')},
+], "requests") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4" style="color: var(--color-primary);">Request Records</h2>
+
+  {% if requests %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr><th>Food</th><th>Donor</th><th>NGO</th><th>Requested Qty</th><th>Status</th><th>Requested At</th></tr>
+      </thead>
+      <tbody>
+        {% for r in requests %}
+        <tr>
+          <td>{{ r.donation.food_name }}</td>
+          <td>{{ r.donation.donor.name }}</td>
+          <td>{{ r.ngo.name }}</td>
+          <td>{{ r.requested_quantity }}</td>
+          <td><span class="badge badge-{{ r.status|lower }}">{{ r.status }}</span></td>
+          <td>{{ r.requested_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-secondary">No requests found.</p>
+  {% endif %}
+</div>
+{% endblock %}

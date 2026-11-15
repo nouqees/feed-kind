@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}My Requests{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('ngo.dashboard')},
+  {"key": "available", "label": "Available Donations", "url": url_for('ngo.available_donations')},
+  {"key": "requests", "label": "My Requests", "url": url_for('ngo.my_requests')},
+], "requests") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4" style="color: var(--color-primary);">My Requests</h2>
+
+  {% if requests %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr><th>Food</th><th>Requested Qty</th><th>Request Status</th><th>Donation Status</th><th>Requested At</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for r in requests %}
+        <tr>
+          <td><a href="{{ url_for('ngo.donation_detail', donation_id=r.donation_id) }}">{{ r.donation.food_name }}</a></td>
+          <td>{{ r.requested_quantity }}</td>
+          <td><span class="badge badge-{{ r.status|lower }}">{{ r.status }}</span></td>
+          <td><span class="badge badge-{{ r.donation.status|lower }}">{{ r.donation.status }}</span></td>
+          <td>{{ r.requested_at.strftime('%d %b %Y, %I:%M %p') }}</td>
+          <td>
+            {% if r.status == 'Pending' %}
+            <form method="POST" action="{{ url_for('ngo.cancel_request', request_id=r.id) }}" class="d-inline" onsubmit="return confirm('Cancel this request?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Cancel</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-secondary">You haven't requested any donations yet. <a href="{{ url_for('ngo.available_donations') }}">Browse available donations</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}

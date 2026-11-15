@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}Add Donation{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('donor.dashboard')},
+  {"key": "donations", "label": "My Donations", "url": url_for('donor.donations')},
+  {"key": "add", "label": "Add Donation", "url": url_for('donor.add_donation')},
+], "add") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4" style="color: var(--color-primary);">Add Food Donation</h2>
+  <div class="card p-4" style="max-width: 720px;">
+    <form method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label class="form-label">Food Name</label>
+        <input type="text" class="form-control" name="food_name" value="{{ form.get('food_name', '') }}" required>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Category</label>
+          <select class="form-select" name="category_id" required>
+            <option value="">Select category</option>
+            {% for c in categories %}
+            <option value="{{ c.id }}" {% if form.get('category_id')|string == c.id|string %}selected{% endif %}>{{ c.category_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Quantity</label>
+          <input type="text" class="form-control" name="quantity" placeholder="e.g. 10 kg, 50 plates" value="{{ form.get('quantity', '') }}" required>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Food Preparation Date &amp; Time</label>
+          <input type="datetime-local" class="form-control" name="prepared_at" value="{{ form.get('prepared_at', '') }}" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Available Until</label>
+          <input type="datetime-local" class="form-control" name="available_until" value="{{ form.get('available_until', '') }}" required>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Pickup Location</label>
+        <textarea class="form-control" name="pickup_location" rows="2" required>{{ form.get('pickup_location', '') }}</textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" name="description" rows="3">{{ form.get('description', '') }}</textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Food Image (optional)</label>
+        <input type="file" class="form-control" name="image" accept=".jpg,.jpeg,.png">
+        <div class="form-text">JPG or PNG, max 2MB.</div>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Donation</button>
+      <a href="{{ url_for('donor.donations') }}" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

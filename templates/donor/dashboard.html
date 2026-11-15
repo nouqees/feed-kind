@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}Donor Dashboard{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('donor.dashboard')},
+  {"key": "donations", "label": "My Donations", "url": url_for('donor.donations')},
+  {"key": "add", "label": "Add Donation", "url": url_for('donor.add_donation')},
+], "dashboard") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4" style="color: var(--color-primary);">Donor Dashboard</h2>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg">
+      <div class="summary-card">
+        <div class="summary-value">{{ summary.total }}</div>
+        <div class="summary-label">Total Donations</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="summary-card">
+        <div class="summary-value">{{ summary.available }}</div>
+        <div class="summary-label">Available</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="summary-card">
+        <div class="summary-value">{{ summary.reserved }}</div>
+        <div class="summary-label">Reserved</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="summary-card">
+        <div class="summary-value">{{ summary.completed }}</div>
+        <div class="summary-label">Completed</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="summary-card">
+        <div class="summary-value">{{ pending_requests }}</div>
+        <div class="summary-label">Pending Requests</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Recent Donations</h5>
+    <a href="{{ url_for('donor.add_donation') }}" class="btn btn-primary btn-sm">+ Add Donation</a>
+  </div>
+
+  {% if recent_donations %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr><th>Food</th><th>Category</th><th>Quantity</th><th>Available Until</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for d in recent_donations %}
+        <tr>
+          <td>{{ d.food_name }}</td>
+          <td>{{ d.category.category_name }}</td>
+          <td>{{ d.quantity }}</td>
+          <td>{{ d.available_until.strftime('%d %b %Y, %I:%M %p') }}</td>
+          <td><span class="badge badge-{{ d.status|lower }}">{{ d.status }}</span></td>
+          <td><a href="{{ url_for('donor.donation_requests', donation_id=d.id) }}" class="btn btn-sm btn-outline-secondary">Requests</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-secondary">You haven't added any donations yet. <a href="{{ url_for('donor.add_donation') }}">Add your first donation</a>.</p>
+  {% endif %}
+</div>
+{% endblock %}

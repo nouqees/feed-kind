@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}Available Donations{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('ngo.dashboard')},
+  {"key": "available", "label": "Available Donations", "url": url_for('ngo.available_donations')},
+  {"key": "requests", "label": "My Requests", "url": url_for('ngo.my_requests')},
+], "available") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4" style="color: var(--color-primary);">Available Donations</h2>
+
+  <form method="GET" class="row g-2 mb-4">
+    <div class="col-auto">
+      <select class="form-select" name="category_id" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        {% for c in categories %}
+        <option value="{{ c.id }}" {% if selected_category|string == c.id|string %}selected{% endif %}>{{ c.category_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  {% if donations %}
+  <div class="row g-3">
+    {% for d in donations %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100 p-3 d-flex flex-column">
+        <h5>{{ d.food_name }}</h5>
+        <p class="text-secondary mb-1">{{ d.category.category_name }} &middot; {{ d.quantity }}</p>
+        <p class="text-secondary mb-1">Available until {{ d.available_until.strftime('%d %b %Y, %I:%M %p') }}</p>
+        <p class="text-secondary mb-3">{{ d.pickup_location }}</p>
+        <a href="{{ url_for('ngo.donation_detail', donation_id=d.id) }}" class="btn btn-primary btn-sm mt-auto">View Details</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-secondary">No available donations match your filter.</p>
+  {% endif %}
+</div>
+{% endblock %}

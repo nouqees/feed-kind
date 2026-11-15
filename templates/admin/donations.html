@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}Donation Records{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('admin.dashboard')},
+  {"key": "users", "label": "Manage Users", "url": url_for('admin.users')},
+  {"key": "donations", "label": "Donation Records", "url": url_for('admin.donations')},
+  {"key": "requests", "label": "Request Records", "url": url_for('admin.requests_list')},
+], "donations") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4" style="color: var(--color-primary);">Donation Records</h2>
+
+  <form method="GET" class="row g-2 mb-4">
+    <div class="col-auto">
+      <select class="form-select" name="status" onchange="this.form.submit()">
+        <option value="">All Statuses</option>
+        {% for s in statuses %}
+        <option value="{{ s }}" {% if status_filter == s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  {% if donations %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr><th>Food</th><th>Donor</th><th>Category</th><th>Quantity</th><th>Available Until</th><th>Status</th><th>Created</th></tr>
+      </thead>
+      <tbody>
+        {% for d in donations %}
+        <tr>
+          <td>{{ d.food_name }}</td>
+          <td>{{ d.donor.name }}</td>
+          <td>{{ d.category.category_name }}</td>
+          <td>{{ d.quantity }}</td>
+          <td>{{ d.available_until.strftime('%d %b %Y, %I:%M %p') }}</td>
+          <td><span class="badge badge-{{ d.status|lower }}">{{ d.status }}</span></td>
+          <td>{{ d.created_at.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-secondary">No donations found.</p>
+  {% endif %}
+</div>
+{% endblock %}

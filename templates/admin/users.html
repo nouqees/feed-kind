@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}Manage Users{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('admin.dashboard')},
+  {"key": "users", "label": "Manage Users", "url": url_for('admin.users')},
+  {"key": "donations", "label": "Donation Records", "url": url_for('admin.donations')},
+  {"key": "requests", "label": "Request Records", "url": url_for('admin.requests_list')},
+], "users") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4" style="color: var(--color-primary);">Manage Users</h2>
+
+  <div class="mb-3">
+    <a href="{{ url_for('admin.users') }}" class="btn btn-sm {{ 'btn-primary' if not role_filter else 'btn-outline-secondary' }}">All</a>
+    <a href="{{ url_for('admin.users', role='DONOR') }}" class="btn btn-sm {{ 'btn-primary' if role_filter == 'DONOR' else 'btn-outline-secondary' }}">Donors</a>
+    <a href="{{ url_for('admin.users', role='NGO') }}" class="btn btn-sm {{ 'btn-primary' if role_filter == 'NGO' else 'btn-outline-secondary' }}">NGOs</a>
+  </div>
+
+  {% if users %}
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr><th>Name</th><th>Email</th><th>Role</th><th>Phone</th><th>Registered</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ u.name }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.role }}</td>
+          <td>{{ u.phone or '-' }}</td>
+          <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+          <td>
+            {% if u.is_active %}
+            <span class="badge badge-available">Active</span>
+            {% else %}
+            <span class="badge badge-cancelled">Inactive</span>
+            {% endif %}
+          </td>
+          <td>
+            <form method="POST" action="{{ url_for('admin.toggle_user_active', user_id=u.id) }}" class="d-inline"
+                  onsubmit="return confirm('{{ 'Deactivate' if u.is_active else 'Activate' }} {{ u.name }}?');">
+              <button type="submit" class="btn btn-sm {{ 'btn-outline-danger' if u.is_active else 'btn-outline-success' }}">
+                {{ 'Deactivate' if u.is_active else 'Activate' }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-secondary">No users found.</p>
+  {% endif %}
+</div>
+{% endblock %}

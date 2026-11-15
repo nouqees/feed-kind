@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}{{ donation.food_name }}{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('ngo.dashboard')},
+  {"key": "available", "label": "Available Donations", "url": url_for('ngo.available_donations')},
+  {"key": "requests", "label": "My Requests", "url": url_for('ngo.my_requests')},
+], "available") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <a href="{{ url_for('ngo.available_donations') }}" class="text-secondary">&larr; Back to Available Donations</a>
+  <div class="row mt-3">
+    <div class="col-md-7">
+      <h2 style="color: var(--color-primary);">{{ donation.food_name }}</h2>
+      {% if donation.image_path %}
+      <img src="{{ url_for('static', filename='uploads/' ~ donation.image_path) }}" alt="" class="img-fluid rounded mb-3" style="max-height: 280px;">
+      {% endif %}
+      <table class="table">
+        <tr><th>Category</th><td>{{ donation.category.category_name }}</td></tr>
+        <tr><th>Quantity</th><td>{{ donation.quantity }}</td></tr>
+        <tr><th>Prepared At</th><td>{{ donation.prepared_at.strftime('%d %b %Y, %I:%M %p') }}</td></tr>
+        <tr><th>Available Until</th><td>{{ donation.available_until.strftime('%d %b %Y, %I:%M %p') }}</td></tr>
+        <tr><th>Pickup Location</th><td>{{ donation.pickup_location }}</td></tr>
+        <tr><th>Donor</th><td>{{ donation.donor.name }} ({{ donation.donor.phone or 'no phone on file' }})</td></tr>
+        <tr><th>Description</th><td>{{ donation.description or '-' }}</td></tr>
+        <tr><th>Status</th><td><span class="badge badge-{{ donation.status|lower }}">{{ donation.status }}</span></td></tr>
+      </table>
+    </div>
+    <div class="col-md-5">
+      <div class="card p-4">
+        {% if existing_request %}
+          <p class="text-secondary">You have already submitted a request for this donation
+          (status: <span class="badge badge-{{ existing_request.status|lower }}">{{ existing_request.status }}</span>).</p>
+          <a href="{{ url_for('ngo.my_requests') }}" class="btn btn-outline-primary btn-sm">View My Requests</a>
+        {% elif can_request %}
+          <h5>Request This Donation</h5>
+          <form method="POST" action="{{ url_for('ngo.request_donation', donation_id=donation.id) }}">
+            <div class="mb-3">
+              <label class="form-label">Quantity you are requesting</label>
+              <input type="text" class="form-control" name="requested_quantity" placeholder="e.g. 10 kg" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Message to donor (optional)</label>
+              <textarea class="form-control" name="message" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Submit Request</button>
+          </form>
+        {% elif is_expired %}
+          <p class="text-secondary">This donation's availability window has passed and can no longer be requested.</p>
+        {% else %}
+          <p class="text-secondary">This donation is no longer available (status: {{ donation.status }}).</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

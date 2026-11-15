@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% from "components/sidebar.html" import render as render_sidebar %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block main_col_class %}col-md-9 col-lg-10{% endblock %}
+{% block sidebar %}
+{{ render_sidebar([
+  {"key": "dashboard", "label": "Dashboard", "url": url_for('admin.dashboard')},
+  {"key": "users", "label": "Manage Users", "url": url_for('admin.users')},
+  {"key": "donations", "label": "Donation Records", "url": url_for('admin.donations')},
+  {"key": "requests", "label": "Request Records", "url": url_for('admin.requests_list')},
+], "dashboard") }}
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <h2 class="mb-4" style="color: var(--color-primary);">Admin Dashboard</h2>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg">
+      <div class="summary-card">
+        <div class="summary-value">{{ total_donors }}</div>
+        <div class="summary-label">Registered Donors</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="summary-card">
+        <div class="summary-value">{{ total_ngos }}</div>
+        <div class="summary-label">Registered NGOs</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="summary-card">
+        <div class="summary-value">{{ total_donations }}</div>
+        <div class="summary-label">Total Donations</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="summary-card">
+        <div class="summary-value">{{ pending_requests }}</div>
+        <div class="summary-label">Pending Requests</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg">
+      <div class="summary-card">
+        <div class="summary-value">{{ completed_donations }}</div>
+        <div class="summary-label">Completed Donations</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-3">
+    <div class="col-lg-6">
+      <div class="card p-3">
+        <h6 class="mb-3">Donations by Category</h6>
+        <div style="height: 220px;">
+          <canvas id="categoryChart" role="img" aria-label="Bar chart of donation counts by food category"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card p-3">
+        <h6 class="mb-3">Donations Added per Month (Last 6 Months)</h6>
+        <div style="height: 220px;">
+          <canvas id="monthlyChart" role="img" aria-label="Bar chart of donation counts per month over the last six months"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+  const textSecondary = "#718078";
+  const gridColor = "#E3E9E3";
+  const primary = "#176B45";
+  const primaryHover = "#115537";
+
+  const baseOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: textSecondary }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { precision: 0, color: textSecondary },
+        grid: { color: gridColor, drawTicks: false }
+      }
+    }
+  };
+
+  new Chart(document.getElementById("categoryChart"), {
+    type: "bar",
+    data: {
+      labels: {{ category_labels|tojson }},
+      datasets: [{
+        data: {{ category_counts|tojson }},
+        backgroundColor: primary,
+        hoverBackgroundColor: primaryHover,
+        borderRadius: 4,
+        maxBarThickness: 48
+      }]
+    },
+    options: baseOptions
+  });
+
+  new Chart(document.getElementById("monthlyChart"), {
+    type: "bar",
+    data: {
+      labels: {{ month_labels|tojson }},
+      datasets: [{
+        data: {{ month_counts|tojson }},
+        backgroundColor: primary,
+        hoverBackgroundColor: primaryHover,
+        borderRadius: 4,
+        maxBarThickness: 32
+      }]
+    },
+    options: baseOptions
+  });
+</script>
+{% endblock %}

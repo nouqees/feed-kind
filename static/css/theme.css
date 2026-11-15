@@ -1,0 +1,108 @@
+:root {
+  --color-primary: #176B45;
+  --color-primary-hover: #115537;
+  --color-secondary: #43A66B;
+  --color-light-green: #E7F3EA;
+  --color-background: #F7F8F2;
+  --color-surface: #FFFFFF;
+  --color-text-primary: #24352B;
+  --color-text-secondary: #718078;
+  --color-success: #2E8B57;
+  --color-warning: #E99A35;
+  --color-danger: #D9534F;
+  --color-border: #E3E9E3;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+/* Navbar */
+.navbar-app {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.navbar-app .navbar-brand {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  min-height: calc(100vh - 56px);
+}
+
+.sidebar .nav-link {
+  color: var(--color-text-secondary);
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background-color: var(--color-light-green);
+  color: var(--color-primary);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+/* Cards */
+.card {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.summary-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.summary-card .summary-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.summary-card .summary-label {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Status badges */
+.badge-available { background-color: var(--color-light-green); color: var(--color-primary); }
+.badge-reserved { background-color: #FCEFDD; color: var(--color-warning); }
+.badge-completed { background-color: var(--color-light-green); color: var(--color-success); }
+.badge-cancelled { background-color: #FBEAEA; color: var(--color-danger); }
+.badge-pending { background-color: #FCEFDD; color: var(--color-warning); }
+.badge-accepted { background-color: var(--color-light-green); color: var(--color-success); }
+.badge-rejected { background-color: #FBEAEA; color: var(--color-danger); }
+
+.table {
+  background-color: var(--color-surface);
+}
